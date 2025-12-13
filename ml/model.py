@@ -1,6 +1,9 @@
 import pickle
 from sklearn.metrics import fbeta_score, precision_score, recall_score
 from ml.data import process_data
+#adding this since I'm using a RandomForestClassifier
+from sklearn.ensemble import RandomForestClassifier
+
 # TODO: add necessary import
 
 # Optional: implement hyperparameter tuning.
@@ -20,10 +23,19 @@ def train_model(X_train, y_train):
         Trained machine learning model.
     """
     # TODO: implement the function
-    pass
+    # Let's try a RandomForestClassifier! They're good for classification tasks.
+    #initializing the model
+
+    rfc_model = RandomForestClassifier()
+
+    #fitting the model to training and labels as described above
+
+    rfc_model.fit(X_train, y_train)
+    return rfc_model
 
 
 def compute_model_metrics(y, preds):
+    #If I understand the assignment correctly, I can just leave this alone
     """
     Validates the trained machine learning model using precision, recall, and F1.
 
@@ -59,8 +71,9 @@ def inference(model, X):
     preds : np.array
         Predictions from the model.
     """
-    # TODO: implement the function
-    pass
+    # The below should be how you return predictions from our model, X being our new input data.
+    preds = model.predict(X)
+    return preds
 
 def save_model(model, path):
     """ Serializes model to a file.
