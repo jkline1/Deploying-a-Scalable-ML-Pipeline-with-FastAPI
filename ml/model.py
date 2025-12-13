@@ -4,9 +4,6 @@ from sklearn.metrics import fbeta_score, precision_score, recall_score
 from ml.data import process_data
 #adding this since I'm using a RandomForestClassifier
 from sklearn.ensemble import RandomForestClassifier
-#this is used in performance_on_categorical_slice
-import numpy as np 
-import pandas as pd
 
 # TODO: add necessary import
 
