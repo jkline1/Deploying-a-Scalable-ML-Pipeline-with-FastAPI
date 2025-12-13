@@ -4,6 +4,9 @@ from sklearn.metrics import fbeta_score, precision_score, recall_score
 from ml.data import process_data
 #adding this since I'm using a RandomForestClassifier
 from sklearn.ensemble import RandomForestClassifier
+#this is used in performance_on_categorical_slice
+import numpy as np 
+import pandas as pd
 
 # TODO: add necessary import
 
@@ -98,6 +101,7 @@ def load_model(path):
     return model
 
 
+
 def performance_on_categorical_slice(
     data, column_name, slice_value, categorical_features, label, encoder, lb, model
 ):
@@ -134,7 +138,75 @@ def performance_on_categorical_slice(
     fbeta : float
 
     """
-    # TODO: implement the function
+    """
+    Calculates precision, recall, and fbeta score for a specific data slice.
+
+    Parameters
+    ----------
+    data : pandas.DataFrame
+        The dataset to evaluate.
+    column_name : str
+        The name of the categorical column to slice on.
+    slice_value : str
+        The specific value within the column to filter by.
+    categorical_features : list
+        A list of all categorical feature names in the data.
+    label : str
+        The name of the target/label column.
+    encoder : dict
+        A dictionary where keys are column names and values are fitted LabelEncoders.
+    lb : sklearn.preprocessing.LabelBinarizer
+        The fitted LabelBinarizer for the target variable.
+    model : fitted sklearn model
+        The trained machine learning model.
+
+    Returns
+    -------
+    precision : float
+    recall : float
+    fbeta : float
+    """
+
+    # Filter the data to create the slice
+    slice_data = data[data[column_name] == slice_value]
+
+    # 2. Prepare the data for prediction
+    X_slice = slice_data[categorical_features].copy()
+    y_true_labels = slice_data[label]
+
+    # Apply the pre-fitted encoders to the slice features
+    for feature in categorical_features:
+        # Handle potential unseen values if necessary
+        try:
+            X_slice[feature] = encoder[feature].transform(X_slice[feature])
+        except ValueError:
+            X_slice[feature] = X_slice[feature].astype('category').cat.codes.fillna(-1).astype(int)
+
+    # Convert to numpy array 
+    X_slice_np = np.array(X_slice.values)
+
+    # 3. Make predictions
+    y_pred_labels = model.predict(X_slice_np)
+
+    # 4. Transform true labels to match model output format (assuming model predicts binarized/encoded labels)
+
+    y_true = lb.transform(y_true_labels)
+    y_pred = lb.transform(pd.Series(y_pred_labels))
+
+    # In binary classification, lb.transform returns a 2D array, so we flatten it
+    if y_true.shape[1] == 1:
+        y_true = y_true.flatten()
+        y_pred = y_pred.flatten()
+
+
+    # 5. Calculate metrics (using beta=1 for default fbeta, i.e., f1 score)
+    # make sure I don't need to fix this
+    precision = precision_score(y_true, y_pred, average='binary', pos_label=1, zero_division=0)
+    recall = recall_score(y_true, y_pred, average='binary', pos_label=1, zero_division=0)
+    fbeta = fbeta_score(y_true, y_pred, beta=1, average='binary', pos_label=1, zero_division=0) # Using beta=1 for F1 score
+
+    return precision, recall, fbeta
+
     X_slice, y_slice, _, _ = process_data(
         # your code here
         # for input data, use data in column given as "column_name", with the slice_value 
