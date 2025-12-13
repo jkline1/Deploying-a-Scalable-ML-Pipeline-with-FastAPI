@@ -30,12 +30,12 @@ def train_model(X_train, y_train):
     # Let's try a RandomForestClassifier! They're good for classification tasks.
     #initializing the model
 
-    rfc_model = RandomForestClassifier()
+    rand_forest = RandomForestClassifier()
 
     #fitting the model to training and labels as described above
 
-    rfc_model.fit(X_train, y_train)
-    return rfc_model
+    rand_forest.fit(X_train, y_train)
+    return rand_forest
 
 
 def compute_model_metrics(y, preds):
@@ -90,11 +90,13 @@ def save_model(model, path):
         Path to save pickle file.
     """
     # TODO: figure out how to generate "path"
+    #the wb parameter opens the file for writing in binary mode
     with open(path, 'wb') as file:
         pickle.dump(model, file)
 
 def load_model(path):
     """ Loads pickle file from `path` and returns it."""
+    #the rb parameter opens the file for reading in binary mode
     # TODO: implement the function
     with open(path, 'rb') as file:
         model = pickle.load(file)
@@ -166,47 +168,18 @@ def performance_on_categorical_slice(
     recall : float
     fbeta : float
     """
-
-    # Filter the data to create the slice
-    slice_data = data[data[column_name] == slice_value]
-
-    # 2. Prepare the data for prediction
-    X_slice = slice_data[categorical_features].copy()
-    y_true_labels = slice_data[label]
-
-    # Apply the pre-fitted encoders to the slice features
-    for feature in categorical_features:
-        # Handle potential unseen values if necessary
-        try:
-            X_slice[feature] = encoder[feature].transform(X_slice[feature])
-        except ValueError:
-            X_slice[feature] = X_slice[feature].astype('category').cat.codes.fillna(-1).astype(int)
-
-    # Convert to numpy array 
-    X_slice_np = np.array(X_slice.values)
-
-    # 3. Make predictions
-    y_pred_labels = model.predict(X_slice_np)
-
-    # 4. Transform true labels to match model output format (assuming model predicts binarized/encoded labels)
-
-    y_true = lb.transform(y_true_labels)
-    y_pred = lb.transform(pd.Series(y_pred_labels))
-
-    # In binary classification, lb.transform returns a 2D array, so we flatten it
-    if y_true.shape[1] == 1:
-        y_true = y_true.flatten()
-        y_pred = y_pred.flatten()
-
-
-    # 5. Calculate metrics (using beta=1 for default fbeta, i.e., f1 score)
-    # make sure I don't need to fix this
-    precision = precision_score(y_true, y_pred, average='binary', pos_label=1, zero_division=0)
-    recall = recall_score(y_true, y_pred, average='binary', pos_label=1, zero_division=0)
-    fbeta = fbeta_score(y_true, y_pred, beta=1, average='binary', pos_label=1, zero_division=0) # Using beta=1 for F1 score
-
-    return precision, recall, fbeta
-
+    data_slice = data[data[column_name]==slice_value]
+    X_slice, y_slice, _, _ = process_data(
+        # your code here
+        # for input data, use data in column given as "column_name", with the slice_value 
+        # use training = False
+        X = data_slice,
+        categorical_features=categorical_features,
+        label = label,
+        training = False,
+        encoder = encoder,
+        lb = lb)
+  
     X_slice, y_slice, _, _ = process_data(
         # your code here
         # for input data, use data in column given as "column_name", with the slice_value 
