@@ -1,3 +1,4 @@
+from os import path
 import pickle
 from sklearn.metrics import fbeta_score, precision_score, recall_score
 from ml.data import process_data
@@ -85,13 +86,16 @@ def save_model(model, path):
     path : str
         Path to save pickle file.
     """
-    # TODO: implement the function
-    pass
+    # TODO: figure out how to generate "path"
+    with open(path, 'wb') as file:
+        pickle.dump(model, file)
 
 def load_model(path):
     """ Loads pickle file from `path` and returns it."""
     # TODO: implement the function
-    pass
+    with open(path, 'rb') as file:
+        model = pickle.load(file)
+    return model
 
 
 def performance_on_categorical_slice(
