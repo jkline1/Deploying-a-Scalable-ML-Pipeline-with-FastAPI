@@ -44,13 +44,13 @@ X_train, y_train, encoder, lb=process_data(
     # use training=True
     # do not need to pass encoder and lb as input
     train,
-    categorical_features = cat_features,
+    categorical_features=cat_features,
     #is this the best label to use?
     label='salary',
     training=True
     )
 
-X_test, y_test, _, _ = process_data(
+X_test, y_test, _, _=process_data(
     test,
     categorical_features=cat_features,
     label='salary',
@@ -65,7 +65,7 @@ model=train_model(X_train, y_train)
 # save the model and the encoder
 model_path=os.path.join(project_path, "model", "model.pkl")
 save_model(model, model_path)
-encoder_path = os.path.join(project_path, "model", "encoder.pkl")
+encoder_path=os.path.join(project_path, "model", "encoder.pkl")
 save_model(encoder, encoder_path)
 
 # load the model
@@ -85,16 +85,16 @@ print(f"Precision: {p:.4f} | Recall: {r:.4f} | F1: {fb:.4f}")
 for col in cat_features:
     # iterate through the unique values in one categorical feature
     for slicevalue in sorted(test[col].unique()):
-        count = test[test[col] == slicevalue].shape[0]
-        p, r, fb = performance_on_categorical_slice(
-            data = test,
-            column_name = col,
-            slice_value = slicevalue,
-            categorical_features = cat_features,
-            label = 'salary',
-            encoder = encoder,
-            lb = lb,
-            model = model
+        count=test[test[col] == slicevalue].shape[0]
+        p, r, fb=performance_on_categorical_slice(
+            data=test,
+            column_name=col,
+            slice_value=slicevalue,
+            categorical_features=cat_features,
+            label='salary',
+            encoder=encoder,
+            lb=lb,
+            model=model
         )
         with open("slice_output.txt", "a") as f:
             print(f"{col}: {slicevalue}, Count: {count:,}", file=f)

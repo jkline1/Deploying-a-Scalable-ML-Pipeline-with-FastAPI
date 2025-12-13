@@ -27,12 +27,12 @@ def train_model(X_train, y_train):
     # Let's try a RandomForestClassifier! They're good for classification tasks.
     #initializing the model
 
-    rand_forest = RandomForestClassifier()
+    rf=RandomForestClassifier()
 
     #fitting the model to training and labels as described above
 
-    rand_forest.fit(X_train, y_train)
-    return rand_forest
+    rf.fit(X_train, y_train)
+    return rf
 
 
 def compute_model_metrics(y, preds):
@@ -52,9 +52,9 @@ def compute_model_metrics(y, preds):
     recall : float
     fbeta : float
     """
-    fbeta = fbeta_score(y, preds, beta=1, zero_division=1)
-    precision = precision_score(y, preds, zero_division=1)
-    recall = recall_score(y, preds, zero_division=1)
+    fbeta=fbeta_score(y, preds, beta=1, zero_division=1)
+    precision=precision_score(y, preds, zero_division=1)
+    recall=recall_score(y, preds, zero_division=1)
     return precision, recall, fbeta
 
 
@@ -73,7 +73,7 @@ def inference(model, X):
         Predictions from the model.
     """
     # The below should be how you return predictions from our model, X being our new input data.
-    preds = model.predict(X)
+    preds=model.predict(X)
     return preds
 
 def save_model(model, path):
@@ -96,7 +96,7 @@ def load_model(path):
     #the rb parameter opens the file for reading in binary mode
     # TODO: implement the function
     with open(path, 'rb') as file:
-        model = pickle.load(file)
+        model=pickle.load(file)
     return model
 
 
@@ -137,47 +137,20 @@ def performance_on_categorical_slice(
     fbeta : float
 
     """
-    """
-    Calculates precision, recall, and fbeta score for a specific data slice.
-
-    Parameters
-    ----------
-    data : pandas.DataFrame
-        The dataset to evaluate.
-    column_name : str
-        The name of the categorical column to slice on.
-    slice_value : str
-        The specific value within the column to filter by.
-    categorical_features : list
-        A list of all categorical feature names in the data.
-    label : str
-        The name of the target/label column.
-    encoder : dict
-        A dictionary where keys are column names and values are fitted LabelEncoders.
-    lb : sklearn.preprocessing.LabelBinarizer
-        The fitted LabelBinarizer for the target variable.
-    model : fitted sklearn model
-        The trained machine learning model.
-
-    Returns
-    -------
-    precision : float
-    recall : float
-    fbeta : float
-    """
-    data_slice = data[data[column_name]==slice_value]
-    X_slice, y_slice, _, _ = process_data(
+ 
+    data_slice=data[data[column_name]==slice_value]
+    X_slice, y_slice, _, _=process_data(
         # your code here
         # for input data, use data in column given as "column_name", with the slice_value 
         # use training = False
         X = data_slice,
         categorical_features=categorical_features,
-        label = label,
-        training = False,
-        encoder = encoder,
-        lb = lb
+        label=label,
+        training=False,
+        encoder=encoder,
+        lb=lb
 
     )
-    preds = inference(model, X_slice)
-    precision, recall, fbeta = compute_model_metrics(y_slice, preds)
+    preds=inference(model, X_slice)
+    precision, recall, fbeta=compute_model_metrics(y_slice, preds)
     return precision, recall, fbeta
