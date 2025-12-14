@@ -243,4 +243,3 @@ As always, but especially when looking at data related to race, national origin,
 ## Caveats and Recommendations
 This was created by a student, which honestly means it shouldn't be used for anything other than evaluating the student's ability to complete the assignment. Certainly it shouldn't be used for any manner of policy decision. Also, this was a relatively small subset of census data. Some groups were over- or under-represented: for example, the group was two-thirds male, overwhelmingly native-born, and had eight times as many husbands as wives.
 
-##test comment
