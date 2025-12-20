@@ -22,21 +22,21 @@ def test_compute_model_metrics():
     Test that the compute_model_metrics function returns floatvalues within a reasonable range.
     """
     # creating two lists as sample data
-    y_true = [[1, 1, 1, 1, 0, 1, 0, 0]]
-    y_pred = [[1, 0, 1, 0, 0, 0, 1, 0]]
+    y_true = [1, 1, 1, 1, 0, 1, 0, 0]
+    y_pred = [1, 0, 1, 0, 0, 0, 1, 0]
 
-    # Calculate metrics
+    # Calculate metrics. Default average is 'binary', which we don't want here. Seeing if "weighted" works better for multi-class
     precision, recall, fbeta = compute_model_metrics(y_true, y_pred)
 
     # 
     # checking for floats 
-    assert isinstance(precision, float), " Precision is not a float"
-    assert isinstance(recall, float), " Recall is not a float"
-    assert isinstance(fbeta, float), " Fbeta is not a float"
+    assert isinstance(precision, float), "Precision is not a float"
+    assert isinstance(recall, float), "Recall is not a float"
+    assert isinstance(fbeta, float), "Fbeta is not a float"
     # checking range
-    assert 0 <= precision <= 1, " Precision is out of range"
-    assert 0 <= recall <= 1, " Recall is out of range"
-    assert 0 <= fbeta <= 1, " Fbeta is out of range"
+    assert 0 <= precision <= 1, "Precision is out of range"
+    assert 0 <= recall <= 1, "Recall is out of range"
+    assert 0 <= fbeta <= 1, "Fbeta is out of range"
 
 
 # TODO: implement the third test. Change the function name and input as needed
