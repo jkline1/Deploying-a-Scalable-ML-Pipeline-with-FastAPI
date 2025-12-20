@@ -26,11 +26,12 @@ class Data(BaseModel):
     hours_per_week: int = Field(..., example=40, alias="hours-per-week")
     native_country: str = Field(..., example="United-States", alias="native-country")
 
-path = None # TODO: enter the path for the saved encoder 
-encoder = load_model(path)
+basepath = os.getcwd()
+encoder_path = os.path.join(basepath, 'model', 'encoder.pkl')
+encoder = load_model(encoder_path)
 
-path = None # TODO: enter the path for the saved model 
-model = load_model(path)
+model_path = os.path.join(basepath, 'model', 'model.pkl')
+model = load_model(model_path)
 
 # per https://fastapi.tiangolo.com/tutorial/first-steps/, I think I just do this?
 app = FastAPI()
